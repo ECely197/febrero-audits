@@ -3,914 +3,418 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDA - Dashboard Febrero</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
+    <title>PDA Master Coach System - Final Crisis Report</title>
     <style>
       :root {
         --bg-dark: #1e1e2e;
-        --card-bg: #2a2a3c;
-        --text-main: #e2e2e2;
-        --accent-pda: #ef4444; /* Red tone similar to branding */
-        --success: #10b981;
-        --warning: #f59e0b;
+        --bg-card: #2b2b3b;
+        --text-main: #e0e0e0;
+        --text-muted: #a0a0b0;
+        --accent: #ff5252; /* Red for Crisis Mode */
+        --success: #00e676;
+        --warning: #ffea00;
+        --info: #00bcd4;
+        --border: #444455;
       }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
       body {
         background-color: var(--bg-dark);
         color: var(--text-main);
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-      .sidebar {
-        background-color: #151520;
-        min-height: 100vh;
-      }
-      .audit-card {
-        background-color: var(--card-bg);
-        border-left: 4px solid var(--accent-pda);
-        margin-bottom: 1rem;
-        border-radius: 8px;
+        display: flex;
+        height: 100vh;
         overflow: hidden;
-        transition: all 0.3s ease;
       }
-      .audit-card[open] {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        border-left: 4px solid var(--success);
+
+      /* Sidebar */
+      .sidebar {
+        width: 260px;
+        background-color: #161621;
+        padding: 20px;
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
       }
-      .audit-card summary {
-        padding: 1rem;
-        cursor: pointer;
-        font-weight: 600;
+
+      .logo {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--accent);
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 10px;
+      }
+
+      .agent-list {
+        list-style: none;
+      }
+
+      .agent-item {
+        padding: 12px;
+        margin-bottom: 8px;
+        background-color: var(--bg-card);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.9rem;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+      }
+
+      .header-panel {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        list-style: none;
+        margin-bottom: 30px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 20px;
       }
-      .audit-card summary:hover {
-        background-color: #323248;
+
+      .alert-banner {
+        background-color: rgba(255, 82, 82, 0.15);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
       }
-      .audit-content {
-        padding: 1.5rem;
-        border-top: 1px solid #3f3f55;
-        animation: fadeIn 0.4s ease-in-out;
+
+      .alert-icon {
+        font-size: 2rem;
       }
-      .pda-tag {
-        background-color: #3f3f55;
-        padding: 2px 8px;
+
+      /* Analysis Table */
+      .analysis-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+      }
+
+      .analysis-table th,
+      .analysis-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .analysis-table th {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+      }
+
+      .tag {
+        padding: 4px 8px;
         border-radius: 4px;
-        font-size: 0.8rem;
-        margin-right: 5px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: #1e1e2e;
+        text-transform: uppercase;
       }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+
+      .tag-robot {
+        background-color: var(--accent);
+        color: white;
       }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
+      .tag-tone {
+        background-color: var(--warning);
       }
-      ::-webkit-scrollbar-track {
-        background: #1e1e2e;
+      .tag-ownership {
+        background-color: var(--info);
       }
-      ::-webkit-scrollbar-thumb {
-        background: #4b4b60;
-        border-radius: 4px;
+
+      /* PDA Action Plan */
+      .pda-box {
+        background-color: #232330;
+        padding: 30px;
+        border-radius: 12px;
+        border: 1px solid var(--success);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .pda-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 15px;
+      }
+
+      .pda-title {
+        color: var(--success);
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .action-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .action-card {
+        background-color: rgba(0, 230, 118, 0.05);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid var(--success);
+      }
+
+      .action-card h3 {
+        color: var(--success);
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      .action-card p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--text-main);
       }
     </style>
   </head>
-  <body class="flex">
-    <!-- SIDEBAR -->
-    <aside class="sidebar w-64 fixed hidden md:block">
-      <div class="p-6 text-center border-b border-gray-700">
-        <h1 class="text-xl font-bold text-red-500">
-          <i class="fas fa-headset mr-2"></i>PDA COACH
-        </h1>
-        <!-- <p class="text-xs text-gray-400 mt-1">Master System v2.0</p> -->
-      </div>
-      <nav class="mt-6">
-        <a
-          href="#"
-          class="block py-3 px-6 text-gray-300 hover:bg-gray-800 hover:text-white transition border-l-4 border-red-500 bg-gray-800"
-        >
-          <i class="fas fa-chart-line mr-3"></i> Dashboard Febrero
-        </a>
-        <a
-          href="#"
-          class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent"
-        >
-          <i class="fas fa-users mr-3"></i> Agentes
-        </a>
-        <!-- <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent">
-                <i class="fas fa-book mr-3"></i> SOPs & Recursos
-            </a> -->
-      </nav>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">CRISIS REPORT</div>
+      <div class="metric-label">Agentes Auditados</div>
+      <ul class="agent-list" style="margin-top: 15px">
+        <li class="agent-item">Miguel Tarazona</li>
+        <li class="agent-item">Dylan Carrillo</li>
+        <li class="agent-item">Gisela Fernández</li>
+        <li class="agent-item">Jean Colina</li>
+        <li class="agent-item">Mercedes Pinedo</li>
+        <li class="agent-item">Nayeli (Georgina)</li>
+        <li class="agent-item">Kiara Bravo</li>
+        <li class="agent-item">Georgina Pérez</li>
+        <li class="agent-item">Gregori González</li>
+      </ul>
+    </div>
 
-      <!-- ESTADO SUPERVISOR -->
-      <div
-        class="absolute bottom-0 w-full p-6 border-t border-gray-700 bg-gray-900"
-      >
-        <div class="flex items-center">
-          <div
-            class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold"
-          >
-            EC
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-semibold"></p>
-            <p class="text-xs text-green-400"></p>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 md:ml-64 p-8">
-      <!-- HEADER -->
-      <header class="flex justify-between items-center mb-10">
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header-panel">
         <div>
-          <h2 class="text-3xl font-bold">Resumen de Calidad - Febrero</h2>
-          <p class="text-gray-400 mt-1">
-            Foco del mes:
-            <span class="text-yellow-400">Humanizar la Marca & Ownership</span>
+          <h1>Informe Final de Caída CSAT</h1>
+          <p style="color: var(--text-muted)">
+            Semana Actual: 83.1%
+            <span style="color: var(--accent); font-weight: bold"
+              >(-10.6%)</span
+            >
           </p>
         </div>
-        <div class="flex gap-4">
-          <div class="text-right">
-            <p class="text-xs text-gray-400">Auditorías Hoy</p>
-            <p class="text-2xl font-bold">9</p>
-          </div>
-          <div class="text-right border-l border-gray-600 pl-4">
-            <p class="text-xs text-gray-400">Promedio General</p>
-            <p class="text-2xl font-bold text-yellow-500">85%</p>
-          </div>
-        </div>
-      </header>
-
-      <!-- ========================================== -->
-      <!-- AGENTE: KIARA BRAVO -->
-      <!-- ========================================== -->
-      <section class="mb-12">
-        <div class="flex items-center mb-6">
+        <div style="text-align: right">
           <div
-            class="w-16 h-16 rounded-full bg-pink-600 flex items-center justify-center text-2xl font-bold mr-4"
+            style="font-size: 2.5rem; font-weight: bold; color: var(--accent)"
           >
-            KB
+            17
           </div>
-          <div>
-            <h3 class="text-2xl font-semibold">Kiara Bravo</h3>
-            <div class="flex gap-2 mt-1">
-              <span class="pda-tag text-green-300 border border-green-600"
-                >Mejora: Ownership</span
-              >
-              <span class="pda-tag text-blue-300 border border-blue-600"
-                >Skill: Empatía</span
-              >
-            </div>
-          </div>
+          <div style="font-size: 0.8rem">LLAMADAS CLAVE</div>
         </div>
+      </div>
 
-        <div id="historial-kiara">
-          <!-- CALL 2: 5995948087236093 (NUEVA) -->
-          <details open class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-pink-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 5995948087236093</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Cancelación en Vivo</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-green-400">88%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Cliente:</strong> Partner Estresado (Alta Demanda).
-                  </p>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Situación:</strong> Quiere cancelar orden ya
-                    preparada porque "no tiene tiempo".
-                  </p>
-                  <p class="text-sm text-gray-300">
-                    <strong>Duración:</strong> Efectiva.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-crown text-yellow-400 mr-2"></i>
-                      ¡Postura Lograda! (Ownership)
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Cambiaste el discurso de víctima ("no me dejan") por el de
-                      líder:
-                      <span class="text-green-400 italic"
-                        >"Para garantizar la experiencia del usuario final, el
-                        pedido debe continuar..."</span
-                      >. Te adueñaste del proceso.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-heart text-green-500 mr-2"></i>
-                      Empatía Táctica
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Validaste la situación ("Entiendo que tienen casa llena
-                      hoy") antes de dar la negativa.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-pink-500"
-                  >
-                    <p class="font-bold text-pink-400 text-sm">
-                      COACHING SCRIPT (Refuerzo):
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Kiara, esa frase 'Para garantizar la experiencia' es oro
-                      puro. Pasaste de culpar al sistema a defender la calidad
-                      del servicio. Guárdala en tu repertorio."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
-
-          <!-- CALL 1: 5762156462679309 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-pink-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 5762156462679309</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Reclamo Devolución</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-yellow-400">80%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Cliente:</strong> Frustrado.
-                  </p>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Situación:</strong> Devolución rechazada
-                    anteriormente.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-user-shield text-red-500 mr-2"></i>
-                      Falla: Ownership
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Minuto 01:15: Dijiste
-                      <span class="text-red-400 italic"
-                        >"Es que el área encargada es estricta y no nos
-                        deja"</span
-                      >. Sonaste a víctima del sistema, perdiendo autoridad ante
-                      el cliente.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-heart text-green-500 mr-2"></i>
-                      Acierto: Empatía
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Tu tono fue cálido y evitó que el cliente gritara, aunque
-                      la justificación técnica fue débil.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-yellow-500"
-                  >
-                    <p class="font-bold text-yellow-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Kiara, tu empatía es tu superpoder, pero cuidado: no
-                      culpes a la empresa. Apóyate en el proceso, no en excusas
-                      de 'ellos no quieren'."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
+      <div class="alert-banner">
+        <span class="alert-icon">⚠️</span>
+        <div>
+          <h3 style="margin-bottom: 5px; color: var(--accent)">
+            DIAGNÓSTICO FINAL: "CEGUERA EMOCIONAL"
+          </h3>
+          <p style="margin: 0">
+            El equipo sabe usar el sistema, pero ha olvidado al cliente. Se
+            detecta un patrón masivo de justificación sistémica ("el sistema
+            dice"), frialdad ante el dolor del cliente (dinero perdido) y falta
+            de Ownership (lavarse las manos).
+          </p>
         </div>
-      </section>
+      </div>
 
-      <!-- ========================================== -->
-      <!-- AGENTE: CARMEN ALAONACA -->
-      <!-- ========================================== -->
-      <section class="mb-12 border-t border-gray-700 pt-8">
-        <div class="flex items-center mb-6">
+      <h3>Desglose de Errores (Top 17 Casos)</h3>
+      <table class="analysis-table">
+        <thead>
+          <tr>
+            <th>Agente</th>
+            <th>Caso</th>
+            <th>Error Principal</th>
+            <th>Categoría</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Miguel T.</td>
+            <td>Flavia (Cobro Indebido)</td>
+            <td>"Comprendo" vacío. Sin explicación.</td>
+            <td><span class="tag tag-robot">Empatía</span></td>
+          </tr>
+          <tr>
+            <td>Miguel T.</td>
+            <td>Sofía (Demora)</td>
+            <td>Mezcla de "Usted/Tú". Confusión.</td>
+            <td><span class="tag tag-tone">Identidad</span></td>
+          </tr>
+          <tr>
+            <td>Dylan C.</td>
+            <td>Alejandra (Cierre)</td>
+            <td>Lenguaje Punitivo ("Mal desempeño").</td>
+            <td><span class="tag tag-tone">Tacto</span></td>
+          </tr>
+          <tr>
+            <td>Jean C.</td>
+            <td>Matías (Rider)</td>
+            <td>Despedida Robótica/Leída.</td>
+            <td><span class="tag tag-robot">Cierre</span></td>
+          </tr>
+          <tr>
+            <td>Miguel T.</td>
+            <td>Jazmin (Rider Perdido)</td>
+            <td>Saludo Leído/Desconectado.</td>
+            <td><span class="tag tag-tone">Inicio</span></td>
+          </tr>
+          <tr>
+            <td>Gisela F.</td>
+            <td>Andrea (Insumos)</td>
+            <td>Inseguridad ("Déjame ver si deja").</td>
+            <td><span class="tag tag-ownership">Confianza</span></td>
+          </tr>
+          <tr>
+            <td>Gisela F.</td>
+            <td>Marta (Pago)</td>
+            <td>Exceso Familiaridad ("Mi hija").</td>
+            <td><span class="tag tag-tone">Profesionalismo</span></td>
+          </tr>
+          <tr>
+            <td>Dylan C.</td>
+            <td>Roxana (Error Rider)</td>
+            <td>Actitud Defensiva ("No fue error nuestro").</td>
+            <td><span class="tag tag-ownership">Ownership</span></td>
+          </tr>
+          <tr>
+            <td>Mercedes P.</td>
+            <td>Marta (Reasignación)</td>
+            <td>Justificación Sistémica ("A mí me sale bien").</td>
+            <td><span class="tag tag-robot">Pasividad</span></td>
+          </tr>
+          <tr>
+            <td>Georgina P.</td>
+            <td>Johan (Falta Producto)</td>
+            <td>Barrera Burocrática ("No podemos cancelar").</td>
+            <td><span class="tag tag-ownership">Resolución</span></td>
+          </tr>
+          <tr>
+            <td>Kiara B.</td>
+            <td>Francisco (Rider Hostil)</td>
+            <td>Impotencia Operativa ("No puedo hacer nada").</td>
+            <td><span class="tag tag-ownership">Seguridad</span></td>
+          </tr>
+          <tr>
+            <td>Nayeli (G)</td>
+            <td>Gabriel (Visibilidad)</td>
+            <td>Sordera Selectiva (No entendió el reclamo).</td>
+            <td><span class="tag tag-ownership">Escucha</span></td>
+          </tr>
+          <tr>
+            <td>Mercedes P.</td>
+            <td>Gabriel (Génesis)</td>
+            <td>Justificación Sistémica ("A mí me sale bien").</td>
+            <td><span class="tag tag-robot">Pasividad</span></td>
+          </tr>
+          <tr>
+            <td>Dylan C.</td>
+            <td>Gabriel (Génesis)</td>
+            <td>Invalidación ("A mí me aparece").</td>
+            <td><span class="tag tag-robot">Empatía</span></td>
+          </tr>
+          <tr>
+            <td>Georgina P.</td>
+            <td>Gabriel (Génesis)</td>
+            <td>Inaccesibilidad ("Si no le deja, no le deja").</td>
+            <td><span class="tag tag-robot">Abandono</span></td>
+          </tr>
+          <tr>
+            <td>Gregori G.</td>
+            <td>Gabriel (Génesis)</td>
+            <td>Impotencia ("No hay solución").</td>
+            <td><span class="tag tag-ownership">Resolución</span></td>
+          </tr>
+          <tr>
+            <td>Gregori G.</td>
+            <td>Gabriel (Génesis - Reincidencia)</td>
+            <td>Falta de Herramientas ("No podemos hacer nada").</td>
+            <td><span class="tag tag-ownership">Empoderamiento</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pda-box">
+        <div class="pda-header">
+          <div class="pda-title">PDA ESTRATÉGICO: "OPERACIÓN RESCATE"</div>
           <div
-            class="w-16 h-16 rounded-full bg-teal-600 flex items-center justify-center text-2xl font-bold mr-4"
+            class="tag tag-robot"
+            style="background-color: var(--success); font-size: 0.9rem"
           >
-            CA
-          </div>
-          <div>
-            <h3 class="text-2xl font-semibold">Carmen Alaonaca</h3>
-            <div class="flex gap-2 mt-1">
-              <span class="pda-tag text-red-300 border border-red-600"
-                >Alerta: Robotización</span
-              >
-              <span class="pda-tag text-blue-300 border border-blue-600"
-                >Skill: Apego a Procesos</span
-              >
-            </div>
-          </div>
-        </div>
-        <div id="historial-carmen">
-          <!-- CALL 1: 4183113245026489 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-teal-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 4183113245026489</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Devolución Cancelada</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-yellow-400">75%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Cliente:</strong> Partner Angustiado (Pérdida de
-                    dinero).
-                  </p>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Duración:</strong> Demasiado rápida.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-robot text-red-500 mr-2"></i>
-                      Falla de Empatía (Efecto Robot)
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      El cliente expresó dolor financiero y respondiste
-                      inmediatamente:
-                      <span class="text-red-400 italic"
-                        >"Comprendo. Le informo que..."</span
-                      >
-                      sin pausa ni tono humano.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-file-alt text-green-500 mr-2"></i>
-                      Apego al SOP
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      La información fue 100% precisa. No inventaste reglas.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-teal-500"
-                  >
-                    <p class="font-bold text-teal-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Carmen, tu técnico es 10, pero hablamos con personas. Haz
-                      una pausa antes de dar la regla y di: 'Entiendo que esto
-                      afecta sus ingresos, lo lamento mucho'. Des-roboticemos el
-                      guion."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <!-- ========================================== -->
-      <!-- AGENTE: KAREN NUÑEZ -->
-      <!-- ========================================== -->
-      <section class="mb-12 border-t border-gray-700 pt-8">
-        <div class="flex items-center mb-6">
-          <div
-            class="w-16 h-16 rounded-full bg-orange-600 flex items-center justify-center text-2xl font-bold mr-4"
-          >
-            KN
-          </div>
-          <div>
-            <h3 class="text-2xl font-semibold">Karen Nuñez</h3>
-            <div class="flex gap-2 mt-1">
-              <span class="pda-tag text-red-300 border border-red-600"
-                >Crítico: Seguridad</span
-              >
-              <span class="pda-tag text-blue-300 border border-blue-600"
-                >Skill: Técnico</span
-              >
-            </div>
-          </div>
-        </div>
-        <div id="historial-karen">
-          <!-- CALL 1: 4693808792484205 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-orange-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 4693808792484205</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Info Orden (Integración)</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-yellow-400">72%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Situación:</strong> Falla de integración. Partner
-                    agresivo.
-                  </p>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Antecedente:</strong> Karen suele dudar de sus
-                    respuestas.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-question-circle text-red-500 mr-2"></i>
-                      Falla: Seguridad
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Usaste
-                      <span class="text-red-400 italic"
-                        >"Eh... creo que... de pronto es un error"</span
-                      >. El cliente percibió duda y pidió supervisor
-                      inmediatamente.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-check text-green-500 mr-2"></i>
-                      Diagnóstico Técnico
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      El diagnóstico fue impecable (Falla de integración). Sabes
-                      la respuesta, falta creerla.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-orange-500"
-                  >
-                    <p class="font-bold text-orange-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Karen, tienes el conocimiento, pero te falta la voz de
-                      mando. Prohibido 'Creo' o 'De pronto'. Usa 'Confirmo' y
-                      'Valido'. Dato mata relato."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <!-- ========================================== -->
-      <!-- AGENTE: VERONICA LEGUIZAMON -->
-      <!-- ========================================== -->
-      <section class="mb-12 border-t border-gray-700 pt-8">
-        <div class="flex items-center mb-6">
-          <div
-            class="w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center text-2xl font-bold mr-4"
-          >
-            VL
-          </div>
-          <div>
-            <h3 class="text-2xl font-semibold">Veronica Leguizamon</h3>
-            <div class="flex gap-2 mt-1">
-              <span class="pda-tag text-green-300 border border-green-600"
-                >Estado: Graduada (Ready)</span
-              >
-              <span class="pda-tag text-purple-300 border border-purple-600"
-                >Nivel: Master</span
-              >
-            </div>
+            APLICACIÓN INMEDIATA
           </div>
         </div>
 
-        <div id="historial-veronica">
-          <!-- CALL 5 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 7645041627156825</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Demora Rider (Contingencia)</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-green-400">98%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Situación:</strong> Paro de Cadetes. Cliente
-                    Furioso.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-shield-alt text-purple-400 mr-2"></i>
-                      Maestría en Crisis
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      El cliente gritó, pero tú mantuviste la calma. Aplicaste
-                      el script oficial:
-                      <span class="text-green-400 italic"
-                        >"Te informo que estamos enfrentando algunos
-                        inconvenientes con nuestra logística..."</span
-                      >. Transparente y empática.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                      Consistencia
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Bajo presión, no volviste a los imperativos. Prueba
-                      superada.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-green-500"
-                  >
-                    <p class="font-bold text-green-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Vero, manejaste el paro de cadetes con elegancia total.
-                      Convertiste a un partner enojado en uno informado. Nivel
-                      experto desbloqueado."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
+        <div class="action-grid">
+          <div class="action-card">
+            <h3>1. REGLA DE ORO: VALIDAR AL CLIENTE, NO AL SISTEMA</h3>
+            <p>
+              <strong>Prohibido decir:</strong> "El sistema dice que llega a las
+              3:20" (cuando ya son las 3:30) o "No tengo la opción".<br />
+              <strong>Nuevo Script:</strong> "Veo lo mismo que tú en pantalla,
+              pero entiendo que la realidad es otra. Aunque mi sistema no me
+              deja bloquearlo, voy a escalar esto a Seguridad inmediatamente."
+            </p>
+          </div>
 
-          <!-- CALL 4 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 4178258476083352</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Modif. Pedido</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-green-400">95%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Situación:</strong> Sin stock de producto.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-graduation-cap text-purple-400 mr-2"></i>
-                      Objetivo Logrado: Autogestión
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Escuché:
-                      <span class="text-green-400 italic"
-                        >"Para evitar futuros rechazos, recuerda que puedes
-                        desactivar este plato desde la sección 'Menú'..."</span
-                      >. Eso es Call Reduction puro.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-purple-500"
-                  >
-                    <p class="font-bold text-purple-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Vero, ¡te graduaste! No solo resolviste, educaste al
-                      partner. Ese cliente no vuelve a llamar por lo mismo."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
+          <div class="action-card">
+            <h3>2. LENGUAJE DE SOCIO (NO PUNITIVO)</h3>
+            <p>
+              <strong>Eliminar:</strong> "Mal desempeño", "Error del cliente",
+              "No se puede".<br />
+              <strong>Usar:</strong> "Ajustes operativos", "Incidencia
+              logística", "Vamos a buscar la alternativa".
+            </p>
+          </div>
 
-          <!-- CALL 3 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 5157901191030247</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Solicitud Apertura</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-green-400">92%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Situación:</strong> Local cerrado por error.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-check-double text-green-500 mr-2"></i>
-                      Empatía Desbloqueada
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Usaste
-                      <span class="text-blue-300 italic"
-                        >"Es importante monitorear la conexión..."</span
-                      >
-                      en lugar del "tienes que". Cambio radical.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
-                      Oportunidad: Autogestión
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Resolviste la apertura, pero perdimos la chance de decirle
-                      que podía hacerlo desde la App.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-green-500"
-                  >
-                    <p class="font-bold text-green-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Vero, qué nivel. Estás lista para el siguiente paso:
-                      Educadora. La próxima vez, enséñale al partner a hacerlo
-                      él mismo."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
+          <div class="action-card">
+            <h3>3. CALIBRACIÓN DE IDENTIDAD (TUTEO PRO)</h3>
+            <p>
+              Eliminar los extremos. Ni el "Usted" temeroso, ni el "Mi hija" de
+              barrio.<br />
+              <strong>Estándar:</strong> "Hola [Nombre], soy [Agente]. Vamos a
+              resolver esto juntos." (Cercano pero con autoridad).
+            </p>
+          </div>
 
-          <!-- CALL 2 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 1990105869019566</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Rechazo Orden</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-green-400">85%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Situación:</strong> Falta insumos.
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-star text-yellow-400 mr-2"></i>
-                      Mejora Confirmada: 4 Dígitos
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Minuto 00:20:
-                      <span class="text-green-400 italic"
-                        >"¿Me confirmas los últimos 4 del pedido?"</span
-                      >. Validación en segundos.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-hand-paper text-red-500 mr-2"></i>
-                      Falla: Fraseo Negativo
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Usaste:
-                      <span class="text-red-400 italic"
-                        >"Tienes que saber que esto te baja puntos"</span
-                      >. Suena a regaño.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-blue-500"
-                  >
-                    <p class="font-bold text-blue-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Vero, ¡qué agilidad! Ahora pulamos el 'tienes que'.
-                      Usemos 'Es importante recordar' para sonar como asesores,
-                      no jueces."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
-
-          <!-- CALL 1 -->
-          <details class="audit-card">
-            <summary class="hover:text-white">
-              <div class="flex items-center gap-4">
-                <div
-                  class="bg-yellow-600 text-white text-xs font-bold px-2 py-1 rounded"
-                >
-                  05 FEB
-                </div>
-                <span class="font-bold text-lg">ID: 8693105417292546</span>
-                <span class="text-sm text-gray-400 hidden sm:block">
-                  | Tema: Problemas Rider</span
-                >
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-yellow-400">78%</span>
-                <i class="fas fa-chevron-down"></i>
-              </div>
-            </summary>
-            <div class="audit-content bg-gray-800">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="col-span-1 border-r border-gray-700 pr-4">
-                  <h5 class="text-red-400 font-bold mb-3 text-sm uppercase">
-                    Contexto de la Llamada
-                  </h5>
-                  <p class="text-sm text-gray-300 mb-2">
-                    <strong>Intención:</strong> "¿Dónde está mi pedido?"
-                  </p>
-                  <p class="text-sm text-gray-300">
-                    <strong>Referencia:</strong> Meet 31/01 (Eliminar
-                    imperativos).
-                  </p>
-                </div>
-                <div class="col-span-2">
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i
-                        class="fas fa-exclamation-triangle text-red-500 mr-2"
-                      ></i>
-                      Falla Crítica: Imperativos
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Minuto 00:45:
-                      <span class="text-red-400 italic"
-                        >"Indícame el número de orden..."</span
-                      >. Palabra gatillo de tensión.
-                    </p>
-                  </div>
-                  <div class="mb-4">
-                    <h6 class="text-white font-bold flex items-center">
-                      <i class="fas fa-stopwatch text-yellow-500 mr-2"></i>
-                      Oportunidad: Agilidad
-                    </h6>
-                    <p class="text-sm text-gray-300 mt-1 pl-6">
-                      Perdiste 20 segundos pidiendo el ID completo. Usa los
-                      últimos 4 dígitos.
-                    </p>
-                  </div>
-                  <div
-                    class="mt-6 bg-gray-900 p-4 rounded border-l-4 border-blue-500"
-                  >
-                    <p class="font-bold text-blue-400 text-sm">
-                      COACHING SCRIPT:
-                    </p>
-                    <p class="text-sm text-gray-400 italic mt-2">
-                      "Vero, la resolución técnica fue buena, pero el 'Indícame'
-                      genera fricción. Cámbialo por '¿Me podrías facilitar?'. Y
-                      prueba pedir solo los últimos 4 dígitos."
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
+          <div class="action-card">
+            <h3>4. EMPATÍA TÁCTICA (NO ROBÓTICA)</h3>
+            <p>
+              El "Comprendo" seco está prohibido si no va seguido de una
+              acción.<br />
+              <strong>Nuevo Script:</strong> "Entiendo perfectamente que esto
+              afecta tu caja/servicio. La solución inmediata es..."
+            </p>
+          </div>
         </div>
-      </section>
-    </main>
-
-    <script>
-      console.log(
-        "PDA Master Coach System - Updated with FULL DETAIL MODE for all 9 calls",
-      );
-    </script>
+      </div>
+    </div>
   </body>
 </html>
